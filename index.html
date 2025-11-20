@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,7 +23,10 @@
         /* --- 시작 화면 (Landing Page) 스타일 --- */
         #start-screen {
             position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -34,7 +38,8 @@
 
         /* 로고 이미지 영역 수정 */
         .logo-area {
-            width: 180px; /* 로고 크기 조절 */
+            width: 180px;
+            /* 로고 크기 조절 */
             height: 180px;
             margin-bottom: 20px;
             animation: float 3s ease-in-out infinite;
@@ -47,7 +52,8 @@
             width: 100%;
             height: 100%;
             object-fit: contain;
-            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5)); /* 그림자 효과 */
+            filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.5));
+            /* 그림자 효과 */
         }
 
         #start-screen h1 {
@@ -116,7 +122,7 @@
         .footer a:hover {
             color: #4CAF50;
         }
-        
+
         .footer-logo {
             font-size: 1.2rem;
         }
@@ -130,21 +136,31 @@
 
         /* 둥둥 떠다니는 애니메이션 */
         @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
-            100% { transform: translateY(0px); }
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-15px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
         }
 
 
         /* --- 게임 화면 스타일 (기존) --- */
         #game-screen {
-            display: none; /* 초기에는 숨김 */
+            display: none;
+            /* 초기에는 숨김 */
             flex-direction: column;
             align-items: center;
             justify-content: center;
             width: 100%;
             height: 100%;
-            opacity: 0; /* 페이드인 효과용 */
+            opacity: 0;
+            /* 페이드인 효과용 */
             transition: opacity 0.5s ease;
         }
 
@@ -152,7 +168,7 @@
             margin: 0 0 15px 0;
             font-size: 1.8rem;
             color: #eee;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
 
         /* 컨트롤 패널 */
@@ -162,7 +178,7 @@
             align-items: center;
             gap: 10px;
             margin-bottom: 20px;
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
             padding: 15px;
             border-radius: 10px;
             width: 320px;
@@ -187,8 +203,13 @@
             cursor: pointer;
         }
 
-        #difficultyContainer { display: none; }
-        #difficultyContainer.show { display: block; }
+        #difficultyContainer {
+            display: none;
+        }
+
+        #difficultyContainer.show {
+            display: block;
+        }
 
         .action-buttons {
             display: flex;
@@ -207,14 +228,41 @@
             transition: all 0.2s;
             flex: 1;
         }
-        .btn:active { transform: scale(0.95); }
 
-        .btn-upload { background-color: #e0e0e0; color: #333; position: relative; overflow: hidden; }
-        .btn-upload input[type=file] { position: absolute; left: 0; top: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
-        
-        .btn-start { background-color: #4CAF50; color: white; }
-        .btn-start:hover { background-color: #45a049; }
-        .btn-start:disabled { background-color: #555; cursor: not-allowed; }
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        .btn-upload {
+            background-color: #e0e0e0;
+            color: #333;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-upload input[type=file] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .btn-start {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .btn-start:hover {
+            background-color: #45a049;
+        }
+
+        .btn-start:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+        }
 
         .timer-display {
             font-size: 2.5rem;
@@ -225,15 +273,24 @@
             text-shadow: 0 0 10px rgba(255, 204, 0, 0.3);
             z-index: 10;
         }
-        .timer-display.danger { color: #ff4444; animation: blink 1s infinite; }
-        @keyframes blink { 50% { opacity: 0.5; } }
+
+        .timer-display.danger {
+            color: #ff4444;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0.5;
+            }
+        }
 
         .game-wrapper {
             position: relative;
             padding: 5px;
             background: #444;
             border-radius: 4px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
             z-index: 10;
             transition: transform 0.1s;
         }
@@ -258,7 +315,11 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        .empty { background: none !important; border: none; cursor: default; }
+        .empty {
+            background: none !important;
+            border: none;
+            cursor: default;
+        }
 
         #message {
             margin-top: 15px;
@@ -272,50 +333,142 @@
         #loading {
             display: none;
             position: absolute;
-            top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background: rgba(0,0,0,0.8); padding: 10px 20px; border-radius: 20px; z-index: 20;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px 20px;
+            border-radius: 20px;
+            z-index: 20;
         }
 
         /* 이펙트 */
         #fireworksCanvas {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1000; display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+            display: none;
         }
 
         @keyframes shake {
-            0% { transform: translate(1px, 1px) rotate(0deg); }
-            10% { transform: translate(-1px, -2px) rotate(-1deg); }
-            20% { transform: translate(-3px, 0px) rotate(1deg); }
-            30% { transform: translate(3px, 2px) rotate(0deg); }
-            40% { transform: translate(1px, -1px) rotate(1deg); }
-            50% { transform: translate(-1px, 2px) rotate(-1deg); }
-            60% { transform: translate(-3px, 1px) rotate(0deg); }
-            70% { transform: translate(3px, 1px) rotate(-1deg); }
-            80% { transform: translate(-1px, -1px) rotate(1deg); }
-            90% { transform: translate(1px, 2px) rotate(0deg); }
-            100% { transform: translate(1px, -2px) rotate(-1deg); }
-        }
-        .shake-effect { animation: shake 0.5s; animation-iteration-count: 1; }
+            0% {
+                transform: translate(1px, 1px) rotate(0deg);
+            }
 
-        body.game-over-state { background-color: #330000; }
-        body.game-over-state .game-container { filter: grayscale(100%) contrast(1.2); }
-        body.game-over-state .timer-display { color: #ff0000; text-shadow: 0 0 20px red; }
+            10% {
+                transform: translate(-1px, -2px) rotate(-1deg);
+            }
+
+            20% {
+                transform: translate(-3px, 0px) rotate(1deg);
+            }
+
+            30% {
+                transform: translate(3px, 2px) rotate(0deg);
+            }
+
+            40% {
+                transform: translate(1px, -1px) rotate(1deg);
+            }
+
+            50% {
+                transform: translate(-1px, 2px) rotate(-1deg);
+            }
+
+            60% {
+                transform: translate(-3px, 1px) rotate(0deg);
+            }
+
+            70% {
+                transform: translate(3px, 1px) rotate(-1deg);
+            }
+
+            80% {
+                transform: translate(-1px, -1px) rotate(1deg);
+            }
+
+            90% {
+                transform: translate(1px, 2px) rotate(0deg);
+            }
+
+            100% {
+                transform: translate(1px, -2px) rotate(-1deg);
+            }
+        }
+
+        .shake-effect {
+            animation: shake 0.5s;
+            animation-iteration-count: 1;
+        }
+
+        body.game-over-state {
+            background-color: #330000;
+        }
+
+        body.game-over-state .game-container {
+            filter: grayscale(100%) contrast(1.2);
+        }
+
+        body.game-over-state .timer-display {
+            color: #ff0000;
+            text-shadow: 0 0 20px red;
+        }
 
         #gameOverOverlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle, transparent 0%, rgba(255,0,0,0.2) 100%);
-            pointer-events: none; display: none; z-index: 5;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, transparent 0%, rgba(255, 0, 0, 0.2) 100%);
+            pointer-events: none;
+            display: none;
+            z-index: 5;
+        }
+
+        /* 정답 위치 이펙트 */
+        @keyframes flash-success {
+            0% {
+                box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7);
+                z-index: 20;
+                transform: scale(1.05);
+            }
+
+            50% {
+                box-shadow: 0 0 20px 10px rgba(76, 175, 80, 0);
+                z-index: 20;
+                transform: scale(1.05);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
+                z-index: 1;
+                transform: scale(1);
+            }
+        }
+
+        .correct-position {
+            animation: flash-success 0.6s ease-out;
+            border: 2px solid #4CAF50 !important;
+            /* 시각적 강조 */
         }
     </style>
 </head>
+
 <body>
 
     <!-- 시작 화면 (Landing Page) -->
     <div id="start-screen">
         <!-- 로고 이미지 (경로 주의: images/emblem.png) -->
         <div class="logo-area">
-            <img src="images/emblem.png" alt="Podo Studio Emblem" onerror="this.style.display='none'; this.parentElement.innerHTML='🧩'; this.parentElement.style.fontSize='5rem';">
+            <img src="images/emblem.png" alt="Podo Studio Emblem"
+                onerror="this.style.display='none'; this.parentElement.innerHTML='🧩'; this.parentElement.style.fontSize='5rem';">
         </div>
-        
+
         <h1>슬라이딩 퍼즐</h1>
         <p>조각을 맞춰 그림을 완성하세요</p>
         <button class="btn-primary" onclick="enterGame()">시작하기</button>
@@ -339,7 +492,7 @@
                     <option value="infinite">무한 모드 (기록 측정)</option>
                     <option value="timeAttack">타임 어택 (제한 시간)</option>
                 </select>
-                
+
                 <div id="difficultyContainer">
                     <select id="difficultySelect">
                         <option value="120">쉬움 (2분)</option>
@@ -360,12 +513,12 @@
         </div>
 
         <div class="timer-display" id="timer">00:00</div>
-        
+
         <div class="game-wrapper" id="gameWrapper">
             <div class="game-container" id="board"></div>
             <div id="loading">이미지 처리 중...</div>
         </div>
-        
+
         <div id="message">모드를 선택하고 시작하세요.</div>
     </div>
 
@@ -381,11 +534,11 @@
 
             // 시작 화면 페이드 아웃
             startScreen.style.opacity = '0';
-            
+
             setTimeout(() => {
                 startScreen.style.display = 'none'; // 완전히 숨김
                 gameScreen.style.display = 'flex';  // 게임 화면 표시
-                
+
                 // 약간의 딜레이 후 게임 화면 페이드 인
                 setTimeout(() => {
                     gameScreen.style.opacity = '1';
@@ -407,19 +560,19 @@
         const fireworksCanvas = document.getElementById('fireworksCanvas');
         const gameOverOverlay = document.getElementById('gameOverOverlay');
         const ctx = fireworksCanvas.getContext('2d');
-        
-        const size = 3; 
+
+        const size = 3;
         const boardSize = 300;
-        const tileSize = boardSize / size; 
-        
-        let tiles = []; 
-        let isPlaying = false; 
+        const tileSize = boardSize / size;
+
+        let tiles = [];
+        let isPlaying = false;
         let timerInterval = null;
         let timerSeconds = 0;
-        
-        let currentImage = 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80'; 
 
-        modeSelect.addEventListener('change', function() {
+        let currentImage = 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80';
+
+        modeSelect.addEventListener('change', function () {
             if (this.value === 'timeAttack') {
                 difficultyContainer.classList.add('show');
                 timerEl.innerText = formatTime(parseInt(difficultySelect.value));
@@ -430,21 +583,21 @@
             if (isPlaying) resetGame();
         });
 
-        difficultySelect.addEventListener('change', function() {
+        difficultySelect.addEventListener('change', function () {
             if (modeSelect.value === 'timeAttack') {
                 timerEl.innerText = formatTime(parseInt(this.value));
             }
         });
 
-        imageInput.addEventListener('change', function(e) {
+        imageInput.addEventListener('change', function (e) {
             const file = e.target.files[0];
             if (!file) return;
 
             loadingEl.style.display = 'block';
             const reader = new FileReader();
-            reader.onload = function(event) {
+            reader.onload = function (event) {
                 const img = new Image();
-                img.onload = function() {
+                img.onload = function () {
                     const canvas = document.createElement('canvas');
                     const ctx = canvas.getContext('2d');
                     canvas.width = boardSize;
@@ -453,10 +606,10 @@
                     const scale = Math.max(canvas.width / img.width, canvas.height / img.height);
                     const x = (canvas.width / 2) - (img.width / 2) * scale;
                     const y = (canvas.height / 2) - (img.height / 2) * scale;
-                    
+
                     ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
                     currentImage = canvas.toDataURL('image/jpeg', 0.8);
-                    
+
                     resetGame();
                     loadingEl.style.display = 'none';
                 }
@@ -468,7 +621,7 @@
         function initBoard() {
             board.innerHTML = '';
             tiles = [];
-            
+
             for (let row = 0; row < size; row++) {
                 for (let col = 0; col < size; col++) {
                     const tileIndex = row * size + col;
@@ -476,7 +629,7 @@
 
                     const tile = document.createElement('div');
                     tile.classList.add('tile');
-                    
+
                     if (isEmpty) {
                         tile.classList.add('empty');
                         tile.id = 'empty';
@@ -489,10 +642,10 @@
                     tile.dataset.col = col;
                     tile.dataset.origRow = row;
                     tile.dataset.origCol = col;
-                    
+
                     updateTilePosition(tile, row, col);
                     tile.addEventListener('click', () => moveTile(tile));
-                    
+
                     board.appendChild(tile);
                     tiles.push(tile);
                 }
@@ -507,12 +660,12 @@
             difficultySelect.disabled = false;
             timerEl.classList.remove('danger');
             board.style.opacity = '1';
-            
+
             document.body.classList.remove('game-over-state');
             gameWrapper.classList.remove('shake-effect');
             gameOverOverlay.style.display = 'none';
             hideFireworks();
-            
+
             if (modeSelect.value === 'timeAttack') {
                 timerEl.innerText = formatTime(parseInt(difficultySelect.value));
             } else {
@@ -520,7 +673,7 @@
             }
             messageEl.innerText = "준비됨";
             messageEl.style.color = "#aaa";
-            
+
             initBoard();
         }
 
@@ -539,9 +692,9 @@
             modeSelect.disabled = true;
             difficultySelect.disabled = true;
             startBtn.disabled = true;
-            
+
             messageEl.innerText = "퍼즐을 섞는 중...";
-            
+
             setTimeout(() => {
                 instantShuffle();
                 isPlaying = true;
@@ -559,7 +712,7 @@
 
             for (let i = 0; i < shuffleCount; i++) {
                 const neighbors = [];
-                const directions = [{r: -1, c: 0}, {r: 1, c: 0}, {r: 0, c: -1}, {r: 0, c: 1}];
+                const directions = [{ r: -1, c: 0 }, { r: 1, c: 0 }, { r: 0, c: -1 }, { r: 0, c: 1 }];
 
                 for (let d of directions) {
                     const nr = emptyRow + d.r;
@@ -567,33 +720,33 @@
 
                     if (nr >= 0 && nr < size && nc >= 0 && nc < size) {
                         if (!lastMove || (lastMove.r !== nr || lastMove.c !== nc)) {
-                            neighbors.push({r: nr, c: nc});
+                            neighbors.push({ r: nr, c: nc });
                         }
                     }
                 }
 
                 if (neighbors.length === 0) {
-                     for (let d of directions) {
+                    for (let d of directions) {
                         const nr = emptyRow + d.r;
                         const nc = emptyCol + d.c;
                         if (nr >= 0 && nr < size && nc >= 0 && nc < size) {
-                             neighbors.push({r: nr, c: nc});
+                            neighbors.push({ r: nr, c: nc });
                         }
-                     }
+                    }
                 }
 
                 const nextPos = neighbors[Math.floor(Math.random() * neighbors.length)];
-                
-                const targetTile = tiles.find(t => 
-                    parseInt(t.dataset.row) === nextPos.r && 
+
+                const targetTile = tiles.find(t =>
+                    parseInt(t.dataset.row) === nextPos.r &&
                     parseInt(t.dataset.col) === nextPos.c
                 );
-                
+
                 const emptyTile = document.getElementById('empty');
 
                 targetTile.dataset.row = emptyRow;
                 targetTile.dataset.col = emptyCol;
-                
+
                 emptyTile.dataset.row = nextPos.r;
                 emptyTile.dataset.col = nextPos.c;
 
@@ -624,14 +777,14 @@
             } else {
                 timerSeconds = 0;
             }
-            
+
             timerEl.innerText = formatTime(timerSeconds);
-            
+
             timerInterval = setInterval(() => {
                 if (mode === 'timeAttack') {
                     timerSeconds--;
                     if (timerSeconds <= 10) timerEl.classList.add('danger');
-                    
+
                     if (timerSeconds < 0) {
                         gameOver(false);
                         return;
@@ -662,7 +815,7 @@
                 messageEl.innerText = `🎉 성공! 기록: ${timerEl.innerText}`;
                 messageEl.style.color = "#4CAF50";
                 board.style.borderColor = "#4CAF50";
-                showFireworks(); 
+                showFireworks();
             } else {
                 messageEl.innerText = "GAME OVER";
                 messageEl.style.color = "#ff4444";
@@ -694,6 +847,16 @@
             if ((Math.abs(r - er) === 1 && c === ec) || (r === er && Math.abs(c - ec) === 1)) {
                 updateTilePosition(tile, er, ec);
                 updateTilePosition(emptyTile, r, c);
+
+                // 정답 위치 확인 및 이펙트
+                if (parseInt(tile.dataset.row) === parseInt(tile.dataset.origRow) &&
+                    parseInt(tile.dataset.col) === parseInt(tile.dataset.origCol)) {
+                    tile.classList.add('correct-position');
+                    setTimeout(() => {
+                        tile.classList.remove('correct-position');
+                    }, 600);
+                }
+
                 if (isPlaying) checkWin();
             }
         }
@@ -702,7 +865,7 @@
             let correctCount = 0;
             tiles.forEach(tile => {
                 if (tile.id === 'empty') return;
-                if (parseInt(tile.dataset.row) === parseInt(tile.dataset.origRow) && 
+                if (parseInt(tile.dataset.row) === parseInt(tile.dataset.origRow) &&
                     parseInt(tile.dataset.col) === parseInt(tile.dataset.origCol)) {
                     correctCount++;
                 }
@@ -728,7 +891,7 @@
             this.gravity = 0.05;
         }
 
-        Particle.prototype.update = function() {
+        Particle.prototype.update = function () {
             this.velocity.x *= this.friction;
             this.velocity.y *= this.friction;
             this.velocity.y += this.gravity;
@@ -737,7 +900,7 @@
             this.alpha -= 0.01;
         };
 
-        Particle.prototype.draw = function() {
+        Particle.prototype.draw = function () {
             ctx.save();
             ctx.globalAlpha = this.alpha;
             ctx.beginPath();
@@ -795,4 +958,5 @@
         initBoard();
     </script>
 </body>
+
 </html>
