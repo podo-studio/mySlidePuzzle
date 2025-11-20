@@ -32,10 +32,22 @@
             transition: opacity 0.5s ease;
         }
 
+        /* 로고 이미지 영역 수정 */
         .logo-area {
-            font-size: 5rem;
+            width: 180px; /* 로고 크기 조절 */
+            height: 180px;
             margin-bottom: 20px;
             animation: float 3s ease-in-out infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-area img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5)); /* 그림자 효과 */
         }
 
         #start-screen h1 {
@@ -72,6 +84,48 @@
 
         .btn-primary:active {
             transform: scale(0.98);
+        }
+
+        /* 하단 로고 및 링크 스타일 */
+        .footer {
+            position: absolute;
+            bottom: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+
+        .footer:hover {
+            opacity: 1;
+        }
+
+        .footer a {
+            text-decoration: none;
+            color: #bbb;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .footer a:hover {
+            color: #4CAF50;
+        }
+        
+        .footer-logo {
+            font-size: 1.2rem;
+        }
+
+        .copyright {
+            font-size: 0.75rem;
+            color: #666;
+            margin-top: 5px;
+            letter-spacing: 0.5px;
         }
 
         /* 둥둥 떠다니는 애니메이션 */
@@ -257,10 +311,22 @@
 
     <!-- 시작 화면 (Landing Page) -->
     <div id="start-screen">
-        <div class="logo-area">🧩</div>
+        <!-- 로고 이미지 (경로 주의: images/emblem.png) -->
+        <div class="logo-area">
+            <img src="images/emblem.png" alt="Podo Studio Emblem" onerror="this.style.display='none'; this.parentElement.innerHTML='🧩'; this.parentElement.style.fontSize='5rem';">
+        </div>
+        
         <h1>슬라이딩 퍼즐</h1>
         <p>조각을 맞춰 그림을 완성하세요</p>
         <button class="btn-primary" onclick="enterGame()">시작하기</button>
+
+        <!-- 하단 로고, 링크, 저작권 -->
+        <div class="footer">
+            <a href="https://podo-studio.github.io/home/" target="_blank" rel="noopener noreferrer">
+                Podo Studio
+            </a>
+            <div class="copyright">© 2025 Podo Studio. All Rights Reserved.</div>
+        </div>
     </div>
 
     <!-- 게임 화면 -->
