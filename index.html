@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>슬라이딩 퍼즐</title>
+    <style>
+        /* 기본 설정 */
+        body {
+            font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            margin: 0;
+            background-color: #222;
+            color: #fff;
+            user-select: none;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- 시작 화면 (Landing Page) 스타일 --- */
+        #start-screen {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #333 0%, #111 100%);
+            z-index: 100;
+            transition: opacity 0.5s ease;
+        }
+
+        .logo-area {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        #start-screen h1 {
+            font-size: 2.5rem;
+            margin: 0 0 10px 0;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        #start-screen p {
+            font-size: 1.1rem;
+            color: #aaa;
+            margin-bottom: 50px;
+        }
+
+        .btn-primary {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(76, 175, 80, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(76, 175, 80, 0.4);
+            background-color: #45a049;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        /* 둥둥 떠다니는 애니메이션 */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+
+        /* --- 게임 화면 스타일 (기존) --- */
+        #game-screen {
+            display: none; /* 초기에는 숨김 */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            opacity: 0; /* 페이드인 효과용 */
+            transition: opacity 0.5s ease;
+        }
+
+        h1.game-title {
+            margin: 0 0 15px 0;
+            font-size: 1.8rem;
+            color: #eee;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        /* 컨트롤 패널 */
+        .top-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            width: 320px;
+            z-index: 10;
+        }
+
+        .mode-selector {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            width: 100%;
+            justify-content: space-between;
+        }
+
+        select {
+            padding: 8px;
+            border-radius: 5px;
+            border: none;
+            background: #444;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        #difficultyContainer { display: none; }
+        #difficultyContainer.show { display: block; }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: all 0.2s;
+            flex: 1;
+        }
+        .btn:active { transform: scale(0.95); }
+
+        .btn-upload { background-color: #e0e0e0; color: #333; position: relative; overflow: hidden; }
+        .btn-upload input[type=file] { position: absolute; left: 0; top: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+        
+        .btn-start { background-color: #4CAF50; color: white; }
+        .btn-start:hover { background-color: #45a049; }
+        .btn-start:disabled { background-color: #555; cursor: not-allowed; }
+
+        .timer-display {
+            font-size: 2.5rem;
+            font-family: monospace;
+            font-weight: bold;
+            color: #ffcc00;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(255, 204, 0, 0.3);
+            z-index: 10;
+        }
+        .timer-display.danger { color: #ff4444; animation: blink 1s infinite; }
+        @keyframes blink { 50% { opacity: 0.5; } }
+
+        .game-wrapper {
+            position: relative;
+            padding: 5px;
+            background: #444;
+            border-radius: 4px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            z-index: 10;
+            transition: transform 0.1s;
+        }
+
+        .game-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            background-color: #333;
+            overflow: hidden;
+            transition: filter 0.5s;
+        }
+
+        .tile {
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            background-size: 300px 300px;
+            cursor: pointer;
+            transition: top 0.2s ease-out, left 0.2s ease-out;
+            box-sizing: border-box;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .empty { background: none !important; border: none; cursor: default; }
+
+        #message {
+            margin-top: 15px;
+            height: 24px;
+            color: #aaa;
+            font-weight: bold;
+            text-align: center;
+            z-index: 10;
+        }
+
+        #loading {
+            display: none;
+            position: absolute;
+            top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.8); padding: 10px 20px; border-radius: 20px; z-index: 20;
+        }
+
+        /* 이펙트 */
+        #fireworksCanvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1000; display: none;
+        }
+
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(3px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(1px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+        .shake-effect { animation: shake 0.5s; animation-iteration-count: 1; }
+
+        body.game-over-state { background-color: #330000; }
+        body.game-over-state .game-container { filter: grayscale(100%) contrast(1.2); }
+        body.game-over-state .timer-display { color: #ff0000; text-shadow: 0 0 20px red; }
+
+        #gameOverOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, transparent 0%, rgba(255,0,0,0.2) 100%);
+            pointer-events: none; display: none; z-index: 5;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 시작 화면 (Landing Page) -->
+    <div id="start-screen">
+        <div class="logo-area">🧩</div>
+        <h1>슬라이딩 퍼즐</h1>
+        <p>조각을 맞춰 그림을 완성하세요</p>
+        <button class="btn-primary" onclick="enterGame()">시작하기</button>
+    </div>
+
+    <!-- 게임 화면 -->
+    <div id="game-screen">
+        <h1 class="game-title">슬라이딩 퍼즐</h1>
+
+        <div class="top-controls">
+            <div class="mode-selector">
+                <select id="modeSelect">
+                    <option value="infinite">무한 모드 (기록 측정)</option>
+                    <option value="timeAttack">타임 어택 (제한 시간)</option>
+                </select>
+                
+                <div id="difficultyContainer">
+                    <select id="difficultySelect">
+                        <option value="120">쉬움 (2분)</option>
+                        <option value="60" selected>보통 (1분)</option>
+                        <option value="30">어려움 (30초)</option>
+                        <option value="15">초고수 (15초)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-upload">
+                    사진 변경
+                    <input type="file" id="imageInput" accept="image/*">
+                </button>
+                <button class="btn btn-start" id="startBtn" onclick="startGame()">게임 시작</button>
+            </div>
+        </div>
+
+        <div class="timer-display" id="timer">00:00</div>
+        
+        <div class="game-wrapper" id="gameWrapper">
+            <div class="game-container" id="board"></div>
+            <div id="loading">이미지 처리 중...</div>
+        </div>
+        
+        <div id="message">모드를 선택하고 시작하세요.</div>
+    </div>
+
+    <!-- 이펙트 요소들 -->
+    <canvas id="fireworksCanvas"></canvas>
+    <div id="gameOverOverlay"></div>
+
+    <script>
+        // --- 화면 전환 로직 ---
+        function enterGame() {
+            const startScreen = document.getElementById('start-screen');
+            const gameScreen = document.getElementById('game-screen');
+
+            // 시작 화면 페이드 아웃
+            startScreen.style.opacity = '0';
+            
+            setTimeout(() => {
+                startScreen.style.display = 'none'; // 완전히 숨김
+                gameScreen.style.display = 'flex';  // 게임 화면 표시
+                
+                // 약간의 딜레이 후 게임 화면 페이드 인
+                setTimeout(() => {
+                    gameScreen.style.opacity = '1';
+                }, 50);
+            }, 500); // 0.5초 후 전환
+        }
+
+        // --- 기존 게임 로직 ---
+        const board = document.getElementById('board');
+        const gameWrapper = document.getElementById('gameWrapper');
+        const imageInput = document.getElementById('imageInput');
+        const messageEl = document.getElementById('message');
+        const startBtn = document.getElementById('startBtn');
+        const loadingEl = document.getElementById('loading');
+        const timerEl = document.getElementById('timer');
+        const modeSelect = document.getElementById('modeSelect');
+        const difficultySelect = document.getElementById('difficultySelect');
+        const difficultyContainer = document.getElementById('difficultyContainer');
+        const fireworksCanvas = document.getElementById('fireworksCanvas');
+        const gameOverOverlay = document.getElementById('gameOverOverlay');
+        const ctx = fireworksCanvas.getContext('2d');
+        
+        const size = 3; 
+        const boardSize = 300;
+        const tileSize = boardSize / size; 
+        
+        let tiles = []; 
+        let isPlaying = false; 
+        let timerInterval = null;
+        let timerSeconds = 0;
+        
+        let currentImage = 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80'; 
+
+        modeSelect.addEventListener('change', function() {
+            if (this.value === 'timeAttack') {
+                difficultyContainer.classList.add('show');
+                timerEl.innerText = formatTime(parseInt(difficultySelect.value));
+            } else {
+                difficultyContainer.classList.remove('show');
+                timerEl.innerText = "00:00";
+            }
+            if (isPlaying) resetGame();
+        });
+
+        difficultySelect.addEventListener('change', function() {
+            if (modeSelect.value === 'timeAttack') {
+                timerEl.innerText = formatTime(parseInt(this.value));
+            }
+        });
+
+        imageInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            loadingEl.style.display = 'block';
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = boardSize;
+                    canvas.height = boardSize;
+
+                    const scale = Math.max(canvas.width / img.width, canvas.height / img.height);
+                    const x = (canvas.width / 2) - (img.width / 2) * scale;
+                    const y = (canvas.height / 2) - (img.height / 2) * scale;
+                    
+                    ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+                    currentImage = canvas.toDataURL('image/jpeg', 0.8);
+                    
+                    resetGame();
+                    loadingEl.style.display = 'none';
+                }
+                img.src = event.target.result;
+            }
+            reader.readAsDataURL(file);
+        });
+
+        function initBoard() {
+            board.innerHTML = '';
+            tiles = [];
+            
+            for (let row = 0; row < size; row++) {
+                for (let col = 0; col < size; col++) {
+                    const tileIndex = row * size + col;
+                    const isEmpty = tileIndex === (size * size - 1);
+
+                    const tile = document.createElement('div');
+                    tile.classList.add('tile');
+                    
+                    if (isEmpty) {
+                        tile.classList.add('empty');
+                        tile.id = 'empty';
+                    } else {
+                        tile.style.backgroundImage = `url('${currentImage}')`;
+                        tile.style.backgroundPosition = `-${col * tileSize}px -${row * tileSize}px`;
+                    }
+
+                    tile.dataset.row = row;
+                    tile.dataset.col = col;
+                    tile.dataset.origRow = row;
+                    tile.dataset.origCol = col;
+                    
+                    updateTilePosition(tile, row, col);
+                    tile.addEventListener('click', () => moveTile(tile));
+                    
+                    board.appendChild(tile);
+                    tiles.push(tile);
+                }
+            }
+        }
+
+        function resetGame() {
+            stopTimer();
+            isPlaying = false;
+            startBtn.disabled = false;
+            modeSelect.disabled = false;
+            difficultySelect.disabled = false;
+            timerEl.classList.remove('danger');
+            board.style.opacity = '1';
+            
+            document.body.classList.remove('game-over-state');
+            gameWrapper.classList.remove('shake-effect');
+            gameOverOverlay.style.display = 'none';
+            hideFireworks();
+            
+            if (modeSelect.value === 'timeAttack') {
+                timerEl.innerText = formatTime(parseInt(difficultySelect.value));
+            } else {
+                timerEl.innerText = "00:00";
+            }
+            messageEl.innerText = "준비됨";
+            messageEl.style.color = "#aaa";
+            
+            initBoard();
+        }
+
+        function startGame() {
+            if (document.body.classList.contains('game-over-state') || fireworksCanvas.classList.contains('active')) {
+                resetGame();
+                setTimeout(() => {
+                    startLogic();
+                }, 50);
+            } else {
+                startLogic();
+            }
+        }
+
+        function startLogic() {
+            modeSelect.disabled = true;
+            difficultySelect.disabled = true;
+            startBtn.disabled = true;
+            
+            messageEl.innerText = "퍼즐을 섞는 중...";
+            
+            setTimeout(() => {
+                instantShuffle();
+                isPlaying = true;
+                messageEl.innerText = "시작!";
+                messageEl.style.color = "#fff";
+                startTimer();
+            }, 200);
+        }
+
+        function instantShuffle() {
+            const shuffleCount = 500;
+            let emptyRow = size - 1;
+            let emptyCol = size - 1;
+            let lastMove = null;
+
+            for (let i = 0; i < shuffleCount; i++) {
+                const neighbors = [];
+                const directions = [{r: -1, c: 0}, {r: 1, c: 0}, {r: 0, c: -1}, {r: 0, c: 1}];
+
+                for (let d of directions) {
+                    const nr = emptyRow + d.r;
+                    const nc = emptyCol + d.c;
+
+                    if (nr >= 0 && nr < size && nc >= 0 && nc < size) {
+                        if (!lastMove || (lastMove.r !== nr || lastMove.c !== nc)) {
+                            neighbors.push({r: nr, c: nc});
+                        }
+                    }
+                }
+
+                if (neighbors.length === 0) {
+                     for (let d of directions) {
+                        const nr = emptyRow + d.r;
+                        const nc = emptyCol + d.c;
+                        if (nr >= 0 && nr < size && nc >= 0 && nc < size) {
+                             neighbors.push({r: nr, c: nc});
+                        }
+                     }
+                }
+
+                const nextPos = neighbors[Math.floor(Math.random() * neighbors.length)];
+                
+                const targetTile = tiles.find(t => 
+                    parseInt(t.dataset.row) === nextPos.r && 
+                    parseInt(t.dataset.col) === nextPos.c
+                );
+                
+                const emptyTile = document.getElementById('empty');
+
+                targetTile.dataset.row = emptyRow;
+                targetTile.dataset.col = emptyCol;
+                
+                emptyTile.dataset.row = nextPos.r;
+                emptyTile.dataset.col = nextPos.c;
+
+                lastMove = { r: emptyRow, c: emptyCol };
+                emptyRow = nextPos.r;
+                emptyCol = nextPos.c;
+            }
+
+            tiles.forEach(tile => {
+                const r = parseInt(tile.dataset.row);
+                const c = parseInt(tile.dataset.col);
+                updateTilePosition(tile, r, c);
+            });
+        }
+
+        function formatTime(seconds) {
+            const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+            const s = (seconds % 60).toString().padStart(2, '0');
+            return `${m}:${s}`;
+        }
+
+        function startTimer() {
+            stopTimer();
+            const mode = modeSelect.value;
+
+            if (mode === 'timeAttack') {
+                timerSeconds = parseInt(difficultySelect.value);
+            } else {
+                timerSeconds = 0;
+            }
+            
+            timerEl.innerText = formatTime(timerSeconds);
+            
+            timerInterval = setInterval(() => {
+                if (mode === 'timeAttack') {
+                    timerSeconds--;
+                    if (timerSeconds <= 10) timerEl.classList.add('danger');
+                    
+                    if (timerSeconds < 0) {
+                        gameOver(false);
+                        return;
+                    }
+                } else {
+                    timerSeconds++;
+                }
+                timerEl.innerText = formatTime(timerSeconds);
+            }, 1000);
+        }
+
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
+        function gameOver(isWin) {
+            stopTimer();
+            isPlaying = false;
+            startBtn.disabled = false;
+            modeSelect.disabled = false;
+            difficultySelect.disabled = false;
+            timerEl.classList.remove('danger');
+
+            if (isWin) {
+                messageEl.innerText = `🎉 성공! 기록: ${timerEl.innerText}`;
+                messageEl.style.color = "#4CAF50";
+                board.style.borderColor = "#4CAF50";
+                showFireworks(); 
+            } else {
+                messageEl.innerText = "GAME OVER";
+                messageEl.style.color = "#ff4444";
+                gameWrapper.classList.add('shake-effect');
+                document.body.classList.add('game-over-state');
+                gameOverOverlay.style.display = 'block';
+                setTimeout(() => {
+                    gameWrapper.classList.remove('shake-effect');
+                }, 500);
+            }
+        }
+
+        function updateTilePosition(tile, row, col) {
+            tile.style.left = `${col * tileSize}px`;
+            tile.style.top = `${row * tileSize}px`;
+            tile.dataset.row = row;
+            tile.dataset.col = col;
+        }
+
+        function moveTile(tile) {
+            if (!isPlaying) return;
+
+            const emptyTile = document.getElementById('empty');
+            const r = parseInt(tile.dataset.row);
+            const c = parseInt(tile.dataset.col);
+            const er = parseInt(emptyTile.dataset.row);
+            const ec = parseInt(emptyTile.dataset.col);
+
+            if ((Math.abs(r - er) === 1 && c === ec) || (r === er && Math.abs(c - ec) === 1)) {
+                updateTilePosition(tile, er, ec);
+                updateTilePosition(emptyTile, r, c);
+                if (isPlaying) checkWin();
+            }
+        }
+
+        function checkWin() {
+            let correctCount = 0;
+            tiles.forEach(tile => {
+                if (tile.id === 'empty') return;
+                if (parseInt(tile.dataset.row) === parseInt(tile.dataset.origRow) && 
+                    parseInt(tile.dataset.col) === parseInt(tile.dataset.origCol)) {
+                    correctCount++;
+                }
+            });
+
+            if (correctCount === 8) {
+                gameOver(true);
+            }
+        }
+
+        // 폭죽 효과
+        let particles = [];
+        const colors = ['#ff0044', '#00ffaa', '#00aaff', '#ffaa00', '#eeff00', '#ff00ff'];
+
+        function Particle(x, y, color) {
+            this.x = x;
+            this.y = y;
+            this.color = color;
+            this.radius = Math.random() * 2 + 1;
+            this.velocity = { x: (Math.random() - 0.5) * 8, y: (Math.random() - 0.5) * 8 };
+            this.alpha = 1;
+            this.friction = 0.95;
+            this.gravity = 0.05;
+        }
+
+        Particle.prototype.update = function() {
+            this.velocity.x *= this.friction;
+            this.velocity.y *= this.friction;
+            this.velocity.y += this.gravity;
+            this.x += this.velocity.x;
+            this.y += this.velocity.y;
+            this.alpha -= 0.01;
+        };
+
+        Particle.prototype.draw = function() {
+            ctx.save();
+            ctx.globalAlpha = this.alpha;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+            ctx.fillStyle = this.color;
+            ctx.fill();
+            ctx.restore();
+        };
+
+        function animateFireworks() {
+            if (!fireworksCanvas.classList.contains('active')) return;
+            requestAnimationFrame(animateFireworks);
+            ctx.clearRect(0, 0, fireworksCanvas.width, fireworksCanvas.height);
+            for (let i = particles.length - 1; i >= 0; i--) {
+                particles[i].update();
+                particles[i].draw();
+                if (particles[i].alpha <= 0.01) particles.splice(i, 1);
+            }
+            if (Math.random() < 0.08) {
+                createFireworks(Math.random() * fireworksCanvas.width, Math.random() * fireworksCanvas.height);
+            }
+        }
+
+        function createFireworks(x, y) {
+            const particleCount = 50;
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle(x, y, color));
+            }
+        }
+
+        function showFireworks() {
+            fireworksCanvas.style.display = 'block';
+            fireworksCanvas.classList.add('active');
+            fireworksCanvas.width = window.innerWidth;
+            fireworksCanvas.height = window.innerHeight;
+            particles = [];
+            createFireworks(fireworksCanvas.width / 2, fireworksCanvas.height / 2);
+            animateFireworks();
+        }
+
+        function hideFireworks() {
+            fireworksCanvas.classList.remove('active');
+            fireworksCanvas.style.display = 'none';
+            particles = [];
+        }
+
+        window.addEventListener('resize', () => {
+            if (fireworksCanvas.classList.contains('active')) {
+                fireworksCanvas.width = window.innerWidth;
+                fireworksCanvas.height = window.innerHeight;
+            }
+        });
+
+        initBoard();
+    </script>
+</body>
+</html>
