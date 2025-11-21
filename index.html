@@ -73,7 +73,6 @@
             transition: opacity 0.5s ease;
         }
 
-        /* 로고 이미지 영역 수정 */
         .logo-area {
             width: 120px;
             height: 120px;
@@ -83,7 +82,6 @@
             align-items: center;
             justify-content: center;
             filter: grayscale(100%) contrast(1.2);
-            /* 흑백 처리 */
         }
 
         .logo-area img {
@@ -94,7 +92,6 @@
 
         #start-screen h1 {
             font-size: 5rem;
-            /* Hero Title Size */
             line-height: 0.9;
             margin: 0 0 20px 0;
             font-weight: 800;
@@ -102,6 +99,7 @@
             text-transform: uppercase;
             background: linear-gradient(to bottom, #fff, #666);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
             text-align: center;
         }
@@ -126,7 +124,6 @@
             cursor: pointer;
             transition: transform 0.2s, background-color 0.2s;
             border-radius: 0;
-            /* Square/Sharp edges */
         }
 
         .btn-primary:hover {
@@ -138,7 +135,6 @@
             transform: scale(0.98);
         }
 
-        /* 하단 로고 및 링크 스타일 */
         .footer {
             position: absolute;
             bottom: 40px;
@@ -174,7 +170,6 @@
             letter-spacing: 0.05em;
         }
 
-        /* 둥둥 떠다니는 애니메이션 */
         @keyframes float {
             0% {
                 transform: translateY(0px);
@@ -188,7 +183,6 @@
                 transform: translateY(0px);
             }
         }
-
 
         /* --- 게임 화면 스타일 (리뉴얼) --- */
         #game-screen {
@@ -213,7 +207,6 @@
             -webkit-text-fill-color: initial;
         }
 
-        /* 컨트롤 패널 */
         .top-controls {
             display: flex;
             flex-direction: column;
@@ -327,7 +320,6 @@
         .timer-display {
             font-size: 3.5rem;
             font-family: 'Manrope', sans-serif;
-            /* Monospace fallback if needed, but Manrope numbers are good */
             font-weight: 200;
             color: var(--text-color);
             margin-bottom: 20px;
@@ -370,7 +362,7 @@
             position: absolute;
             background-size: 300px 300px;
             cursor: pointer;
-            transition: top 0.2s ease-out, left 0.2s ease-out;
+            transition: top 0.2s ease-out, left 0.2s ease-out, opacity 0.3s;
             box-sizing: border-box;
             border: 1px solid rgba(0, 0, 0, 0.5);
         }
@@ -407,7 +399,6 @@
             font-size: 0.9rem;
         }
 
-        /* 이펙트 */
         #fireworksCanvas {
             position: fixed;
             top: 0;
@@ -494,7 +485,6 @@
             z-index: 5;
         }
 
-        /* 정답 위치 이펙트 (White Glow for Monochrome) */
         @keyframes flash-success {
             0% {
                 box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.5);
@@ -528,9 +518,7 @@
 <body>
     <button class="lang-toggle" onclick="toggleLanguage()">KO / EN</button>
 
-    <!-- 시작 화면 (Landing Page) -->
     <div id="start-screen">
-        <!-- 로고 이미지 (경로 주의: images/emblem.png) -->
         <div class="logo-area">
             <img src="images/emblem.png" alt="Podo Studio Emblem"
                 onerror="this.style.display='none'; this.parentElement.innerHTML='🧩'; this.parentElement.style.fontSize='5rem';">
@@ -540,16 +528,12 @@
         <p data-i18n="subtitle">DIGITAL VINEYARD</p>
         <button class="btn-primary" onclick="enterGame()" data-i18n="startBtn">START GAME</button>
 
-        <!-- 하단 로고, 링크, 저작권 -->
         <div class="footer">
-            <a href="https://podo-studio.github.io/home/" target="_blank" rel="noopener noreferrer">
-                Podo Studio
-            </a>
+            <a href="https://podo-studio.github.io/home/" target="_blank" rel="noopener noreferrer">Podo Studio</a>
             <div class="copyright">© 2025 Podo Studio. All Rights Reserved.</div>
         </div>
     </div>
 
-    <!-- 게임 화면 -->
     <div id="game-screen">
         <h1 class="game-title" data-i18n="title">SLIDING PUZZLE</h1>
 
@@ -590,12 +574,10 @@
         <div id="message" data-i18n="msgReady">READY TO PLAY</div>
     </div>
 
-    <!-- 이펙트 요소들 -->
     <canvas id="fireworksCanvas"></canvas>
     <div id="gameOverOverlay"></div>
 
     <script>
-        // --- 다국어 지원 (i18n) ---
         const translations = {
             ko: {
                 title: "슬라이딩 퍼즐",
@@ -637,13 +619,12 @@
             }
         };
 
-        let currentLang = 'ko'; // 기본 언어 한국어
+        let currentLang = 'ko';
 
         function updateLanguage(lang) {
             currentLang = lang;
             document.documentElement.lang = lang;
 
-            // data-i18n 속성이 있는 모든 요소 업데이트
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.dataset.i18n;
                 if (translations[lang][key]) {
@@ -651,7 +632,6 @@
                 }
             });
 
-            // 동적 메시지 업데이트 (현재 상태에 따라)
             if (!isPlaying) {
                 messageEl.innerText = translations[lang].msgReady;
             }
@@ -662,26 +642,22 @@
             updateLanguage(newLang);
         }
 
-        // --- 화면 전환 로직 ---
         function enterGame() {
             const startScreen = document.getElementById('start-screen');
             const gameScreen = document.getElementById('game-screen');
 
-            // 시작 화면 페이드 아웃
             startScreen.style.opacity = '0';
 
             setTimeout(() => {
-                startScreen.style.display = 'none'; // 완전히 숨김
-                gameScreen.style.display = 'flex';  // 게임 화면 표시
+                startScreen.style.display = 'none';
+                gameScreen.style.display = 'flex';
 
-                // 약간의 딜레이 후 게임 화면 페이드 인
                 setTimeout(() => {
                     gameScreen.style.opacity = '1';
                 }, 50);
-            }, 500); // 0.5초 후 전환
+            }, 500);
         }
 
-        // --- 기존 게임 로직 ---
         const board = document.getElementById('board');
         const gameWrapper = document.getElementById('gameWrapper');
         const imageInput = document.getElementById('imageInput');
@@ -947,6 +923,17 @@
             timerEl.classList.remove('danger');
 
             if (isWin) {
+                const emptyTile = document.getElementById('empty');
+                if (emptyTile) {
+                    emptyTile.classList.remove('empty');
+                    emptyTile.style.backgroundImage = `url('${currentImage}')`;
+                    const lastRow = parseInt(emptyTile.dataset.origRow);
+                    const lastCol = parseInt(emptyTile.dataset.origCol);
+                    emptyTile.style.backgroundPosition = `-${lastCol * tileSize}px -${lastRow * tileSize}px`;
+                    emptyTile.style.opacity = '0';
+                    setTimeout(() => { emptyTile.style.opacity = '1'; }, 100);
+                }
+
                 messageEl.innerText = `${translations[currentLang].msgSuccess} ${timerEl.innerText}`;
                 messageEl.style.color = "#fff";
                 board.style.borderColor = "#fff";
@@ -983,7 +970,6 @@
                 updateTilePosition(tile, er, ec);
                 updateTilePosition(emptyTile, r, c);
 
-                // 정답 위치 확인 및 이펙트
                 if (parseInt(tile.dataset.row) === parseInt(tile.dataset.origRow) &&
                     parseInt(tile.dataset.col) === parseInt(tile.dataset.origCol)) {
                     tile.classList.add('correct-position');
@@ -1011,7 +997,6 @@
             }
         }
 
-        // 폭죽 효과
         let particles = [];
         const colors = ['#ff0044', '#00ffaa', '#00aaff', '#ffaa00', '#eeff00', '#ff00ff'];
 
@@ -1090,7 +1075,6 @@
             }
         });
 
-        // 초기 언어 설정 (한국어)
         updateLanguage('ko');
         initBoard();
     </script>
